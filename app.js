@@ -77,7 +77,7 @@ document.getElementById('getWithxhr').addEventListener('click', getSalesWithXhr)
 // function that makes sales requests using  fetch
 
 const getSalesWithFetch = () => {
-    let url = 'https://marsol-test.herokuapp.com/history';
+    let url = 'https://marsol-test.herokuapp.com/unsecure/history';
     let token = JSON.parse(sessionStorage.getItem('providedToken'));
     let bigHead = new Headers();
     bigHead.append('Authentication', `Bearer ${token}`);
