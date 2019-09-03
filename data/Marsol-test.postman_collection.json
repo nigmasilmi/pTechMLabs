@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "32fac109-9e80-4408-8a44-909ca4c19b3e",
+		"name": "Marsol-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login con Basic Auth",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "mreodriguez",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "EstaEsMiSuperClave",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/login",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login con query",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/login?user=mreodriguez&pass=EstaEsMiSuperClave",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "mreodriguez"
+						},
+						{
+							"key": "pass",
+							"value": "EstaEsMiSuperClave"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Historial de ventas",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/history",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Historial de ventas segun item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/history/item/120952",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"history",
+						"item",
+						"120952"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Historial de ventas segun vendedor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/history/vendedor/abustos",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"history",
+						"vendedor",
+						"abustos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista de productos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/items",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista de ventas",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://marsol-test.herokuapp.com/ventas",
+					"protocol": "https",
+					"host": [
+						"marsol-test",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"ventas"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

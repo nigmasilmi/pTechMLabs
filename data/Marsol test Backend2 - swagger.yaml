@@ -1,0 +1,215 @@
+swagger: "2.0"
+info:
+  description: "Este es un archivo Swagger de descripcion de API de prueba marsol. Los endpoints aca descritos pueden ser usados como ejemplo de comparación. Solo Login puede ser usado como servicio. Todos los usuarios poseen clave 'EstaEsMiSuperClave' "
+  version: "1.0.0"
+  title: "Marsol Test - Swagger"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "jviera@marsol.cl"
+  license:
+    name: "ISC"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "marsol-test.herokuapp.com"
+tags:
+- name: "login"
+  description: "Servicio de autenticación de usuarios. Resuelve un token"
+- name: "history"
+  description: "Historial de ventas por día"
+- name: "items"
+  description: "Lista de productos disponibles a la venta"
+- name: "ventas"
+  description: "Lista de ventas realizadas"
+schemes:
+- "https"
+- "http"
+paths:
+  /login:
+    get:
+      tags:
+      - "login"
+      summary: "Autentica usuario devolviendo token de acceso"
+      operationId: "getLogin"
+      produces:
+      - "application/text"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Basic Authorization header"
+        required: true
+      - in: "query"
+        name: "user"
+        type: "string"
+        description: "En caso de no usar header, pasar por query las credenciales (No recomendado)"
+        required: false
+      - in: "query"
+        name: "pass"
+        type: "string"
+        description: "En caso de no usar header, pasar por query las credenciales (No recomendado)"
+        required: false
+      responses:
+        401:
+          description: "Combinacion de usuario y contraseña no encontrado"
+        200:
+          description: "Token generado"
+  /history:
+    get:
+      tags:
+      - "history"
+      summary: "Retorna historial de ventas por día"
+      operationId: "history"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Bearer Authorization header"
+        required: true
+      responses:
+        401:
+          description: "Token invalido"
+        200:
+          description: "Lista de ventas agrupadas por dia"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/venta"
+  /history/item/{itemId}:
+    get:
+      tags:
+      - "history"
+      summary: "Retorna historial de ventas por día agrupado por producto"
+      operationId: "historyByitemId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Bearer Authorization header"
+        required: true
+      - in: "path"
+        type: "string"
+        name: "itemId"
+        description: "Codigo de producto"
+        required: true
+      responses:
+        401:
+          description: "Token invalido"
+        200:
+          description: "Lista de ventas agrupadas por dia y por producto"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/venta"
+  /history/vendedor/{id}:
+    get:
+      tags:
+      - "history"
+      summary: "Retorna historial de ventas por día agrupado por vendedor"
+      operationId: "historyByVendedor"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Bearer Authorization header"
+        required: true
+      - in: "path"
+        type: "string"
+        name: "id"
+        description: "Id de vendedor"
+        required: true
+      responses:
+        401:
+          description: "Token invalido"
+        200:
+          description: "Lista de ventas agrupadas por dia y por vendedor"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/venta"
+  /items:
+    get:
+      tags:
+      - "items"
+      summary: "Retorna lista de productos disponibles para la venta"
+      operationId: "item"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Bearer Authorization header"
+        required: true
+      responses:
+        401:
+          description: "Token invalido"
+        200:
+          description: "Lista de productos a la venta"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/item"
+  /ventas:
+    get:
+      tags:
+      - "ventas"
+      summary: "Retorna lista de ventas realizadas"
+      operationId: "ventas"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "Authorization"
+        description: "Bearer Authorization header"
+        required: true
+      responses:
+        401:
+          description: "Token invalido"
+        200:
+          description: "Lista de ventas realizadas"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ventas"
+definitions:
+  venta:
+    type: "object"
+    properties:
+      cantidad_vendida:
+        type: "integer"
+        format: "int64"
+      total_vendido:
+        type: "number"
+        format: "float"
+      fecha:
+        type: "string"
+        format: "date-time"
+  item:
+    type: "object"
+    properties:
+      codigo:
+        type: "string"
+      precio:
+        type: "number"
+        format: "float"
+      descripcion:
+        type: "string"
+  ventas:
+    type: "object"
+    properties:
+      item:
+        type: "string"
+      vendedor:
+        type: "string"
+      cantidad:
+        type: "integer"
+        format: "int64"
+      fecha:
+        type: "string"
+        format: "date-time"
