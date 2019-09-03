@@ -1,0 +1,33 @@
+
+.container{
+    flex-direction: column;
+    margin-top: 40%;
+    background: rgb(99, 22, 223);
+    width: 80vw;
+   
+}
+.navbar{
+    flex-direction: column;
+}
+
+.sellerShowing{
+    color:rgb(245, 229, 229);
+}
+.sellerShowing h3{
+    color:#fff;
+}
+
+h1,h2,h3,h4,h5{
+    font-family: 'Open Sans', sans-serif;
+    color: #534f4f;
+    font-weight: bold;
+}
+
+
+
+.fixed-top{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+}
