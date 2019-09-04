@@ -1,74 +1,88 @@
 //Setting up the credentials for the session
 document.addEventListener('DOMContentLoaded', () => {
-    sessionStorage.setItem('providedToken', JSON.stringify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1yZW9kcmlndWV6IiwiaWF0IjoxNTY3MTE0NjIyLCJleHAiOjE1NjcxMTQ5MjJ9._CwEtsPNWATOTWOb6ffAeMtruKJHrl6YRrK_Fi_kY08'));
+    sessionStorage.setItem('currentToken', '' );
+    authorizationFunk();
 
 });
 
-// function that makes request auth using the xmlhttpr object
-
-const getAuthWithXhr = () => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://marsol-test.herokuapp.com/login?user=mreodriguez&&pass=EstaEsMiSuperClave', true);
-    xhr.onload = () => {
-        if (this.status == 200) {
-            var response = xhr;
-            console.log(JSON.parse(response));
-        } else {
-            console.log(xhr.status);
-        }
-    };
-    xhr.send();
-};
 
 
-document.getElementById('getWithxhr').addEventListener('click', getAuthWithXhr);
+const authorizationFunk = () => {
+    //display the auth div
+    let base = document.createElement('div');
+    base.setAttribute('id', 'authCanvas');
+    base.setAttribute('class', 'container');
 
+    let inputName = document.createElement('input');
+    inputName.setAttribute('type', 'text');
+    inputName.setAttribute('id', 'nameId');
+    inputName.setAttribute('placeholder', 'Nombre de usuario');
 
-// function that makes sales requests using xhr
+    let inputPass = document.createElement('input');
+    inputPass.setAttribute('type', 'password');
+    inputPass.setAttribute('id', 'passId');
+    inputPass.setAttribute('placeholder', 'Contraseña');
 
-const getSalesWithXhr = () => {
-    const xhr = new XMLHttpRequest();
-    let bigHead = new Headers();
-    bigHead.append('Authentication', `Bearer ${token}`);
-    let request = new Request(url, {
-        method: 'GET',
-        mode: 'cors',
-        headers: bigHead
+    let errorPlace = document.createElement('span');
+    errorPlace.setAttribute('id', 'showMeTheError');
 
+    let submitBtn = document.createElement('div');
+    submitBtn.setAttribute('id', 'submitBtnId');
+    submitBtn.textContent = 'Autenticarse';
+    submitBtn.setAttribute('class', 'btn btn-danger');
+    base.appendChild(inputName);
+    base.appendChild(inputPass);
+    base.appendChild(errorPlace);
+    base.appendChild(submitBtn);
+
+    document.getElementById('mainContainer').appendChild(base);
+
+    document.getElementById('submitBtnId').addEventListener('click', () => {
+        console.log('elboton funciona');
+        let name = document.getElementById('nameId').value;
+        console.log(name);
+        let pass = document.getElementById('passId').value;
+        console.log(pass);
+
+        fetchAccessRequest(name, pass);
     });
-    xhr.open(request);
-    xhr.onload = () => {
-        if (this.status == 200) {
-            var response = xhr;
-            console.log(JSON.parse(response));
-        } else {
-            console.log(xhr.status);
-        }
-    };
-    xhr.send();
+
+
 };
 
-document.getElementById('getWithxhr').addEventListener('click', getSalesWithXhr);
+//function that triggers the authentication process in server side
+const fetchAccessRequest = (name, pass) => {
+    
+    let url = `https://marsol-test.herokuapp.com/login?user=${name}&&pass=${pass}`;
 
-// //function that sets  the request
-// const makeTheRequest = ()=>{
-//     let url = 'https://marsol-test.herokuapp.com/unsecure/history';
-//     let token = JSON.parse(sessionStorage.getItem('providedToken'));
-//     let bigHead = new Headers();
-//     bigHead.append('Authentication', `Bearer ${token}`);
-//     let request = new Request(url, {
-//         method: 'GET',
-//         mode: 'cors',
-//         headers: bigHead
-//     });
-// };
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+           const access_token = data.access_token;
+           sessionStorage.setItem('currentToken', access_token);
+           console.log(sessionStorage.getItem('currentToken'));
+           document.getElementById('authCanvas').remove();
+           document.getElementById('btnWrapper').setAttribute('class', 'show');
+           
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+
+
+
+};
+
+
 
 
 // function that makes sales requests using  fetch
 
 const getSalesWithFetch = () => {
-    let url = 'https://marsol-test.herokuapp.com/unsecure/history';
-    let token = JSON.parse(sessionStorage.getItem('providedToken'));
+    let url = 'https://marsol-test.herokuapp.com/history';
+    let token = sessionStorage.getItem('currentToken');
+    console.log(sessionStorage.getItem('currentToken'));
     let bigHead = new Headers();
     bigHead.append('Authentication', `Bearer ${token}`);
     let request = new Request(url, {
@@ -124,14 +138,14 @@ const dateFormatting = (dateStr) => {
     let stringToDisplay = `${day} de ${month} de ${year}`;
     return stringToDisplay;
 };
-dateFormatting('2019-07-03T00:00:00.000Z');
 
 // function that reports the last sales
 
 const salesSoFar = () => {
     //sets the request
     let url = 'https://marsol-test.herokuapp.com/unsecure/history';
-    let token = JSON.parse(sessionStorage.getItem('providedToken'));
+    let token = sessionStorage.getItem('currentToken');
+    console.log(token);
     let bigHead = new Headers();
     bigHead.append('Authentication', `Bearer ${token}`);
     let request = new Request(url, {
@@ -139,11 +153,17 @@ const salesSoFar = () => {
         mode: 'cors',
         headers: bigHead
     });
+
+
     //sets the DOM
 
     let listContent = '';
+    document.getElementById('outPutItemSales').setAttribute('class', 'hide');
+    document.getElementById('totalSales').removeAttribute('class', 'hide');
+    document.getElementById('sellerSales').setAttribute('class', 'hide');
 
     //process the response
+
     fetch(request)
         .then(res => res.json())
         .then(data => {
@@ -152,6 +172,9 @@ const salesSoFar = () => {
                 listContent +=
                     `<tr><td>${sale.cantidad_vendida}</td><td>${sale.total_vendido}</td><td>${dateFormatting(sale.fecha)}</td></tr>`;
             });
+            
+            
+
             document.getElementById('tSalesbdTab').innerHTML = listContent;
 
         })
@@ -170,15 +193,22 @@ document.getElementById('getSalesWithFetch').addEventListener('click', salesSoFa
 const salesEachSeller = (seller) => {
     let sellerToRequest = '';
     const sellersArray = ['abustos', 'ndiaz', 'mreodriguez', 'emarin'];
-    sellersArray.forEach((name)=>{
-        if (seller === name){
+    sellersArray.forEach((name) => {
+        if (seller === name) {
             sellerToRequest = name;
         }
     });
+
+    //sets the DOM
+    document.getElementById('totalSales').setAttribute('class', 'hide');
+    document.getElementById('sellerSales').setAttribute('class', 'table table-dark');
+    document.getElementById('sellerToDisplay').textContent = sellerToRequest;
+
     console.log(sellerToRequest);
+
     //sets the request
     let url = `https://marsol-test.herokuapp.com/unsecure/history/vendedor/${sellerToRequest}`;
-    let token = JSON.parse(sessionStorage.getItem('providedToken'));
+    let token = sessionStorage.getItem('currentToken');
     let bigHead = new Headers();
     bigHead.append('Authentication', `Bearer ${token}`);
     let request = new Request(url, {
@@ -187,7 +217,7 @@ const salesEachSeller = (seller) => {
         headers: bigHead
     });
     //sets the DOM
-    document.getElementById('sellerToDisplay').textContent= sellerToRequest;
+
     let listContent = '';
 
     //process the response
@@ -198,8 +228,57 @@ const salesEachSeller = (seller) => {
             data.forEach((sale) => {
                 listContent +=
                     `<tr><td>${sale.cantidad_vendida}</td><td>${sale.total_vendido}</td><td>${dateFormatting(sale.fecha)}</td></tr>`;
+
             });
             document.getElementById('tSellerbdTab').innerHTML = listContent;
+
+            
+
+        })
+        .catch(error => {
+            console.log('hubo un problema en la obtención de la data de ventas por vendedor');
+        });
+        
+
+};
+// document.getElementById('getSellerSales').addEventListener('click', salesEachSeller);
+
+
+// function that reports the sales per item
+const salesPerItem = () => {
+    //sets the request
+    let url = 'https://marsol-test.herokuapp.com/unsecure/items';
+    let token = sessionStorage.getItem('currentToken');
+    console.log(token);
+    let bigHead = new Headers();
+    bigHead.append('Authentication', `Bearer ${token}`);
+    let request = new Request(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: bigHead
+    });
+
+
+    //sets the DOM
+
+    let listContent = '';
+    document.getElementById('outPutItemSales').removeAttribute('class', 'hide');
+    document.getElementById('totalSales').setAttribute('class', 'hide');
+    document.getElementById('sellerSales').setAttribute('class', 'hide');
+
+    //process the response
+
+    fetch(request)
+        .then(res => res.json())
+        .then(data => {
+            console.log('esto es la data de items',data);
+            data.forEach((item) => {
+                listContent +=
+                    `<tr><td>${item.codigo}</td><td>${item.descripcion}</td><td>${item.precio}</td></tr>`;
+            });
+            
+            
+            document.getElementById('tItembdTab').innerHTML = listContent;
 
         })
         .catch(error => {
@@ -207,13 +286,16 @@ const salesEachSeller = (seller) => {
         });
 
 };
-// document.getElementById('getSellerSales').addEventListener('click', salesEachSeller);
+document.getElementById('getSalesPerItem').addEventListener('click', salesPerItem);
+
+
 
 // receives the seller by the clicked button and calls the function to request the sales data
 let btnGroup = document.querySelectorAll('.dropdown-item');
-btnGroup.forEach(this.addEventListener('click', (e)=>{
-    let sellerRequested = e.target.value;
-    salesEachSeller(sellerRequested);
+Array.from(btnGroup).forEach((element => {
+    element.addEventListener('click', (event)=>{
+        let sellerRequested = event.target.value;
+        salesEachSeller(sellerRequested);
+    });
+ 
 }));
-
-
